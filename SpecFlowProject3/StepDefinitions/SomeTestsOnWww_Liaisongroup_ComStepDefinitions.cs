@@ -174,7 +174,6 @@ namespace SpecFlowProject3.StepDefinitions
         [When(@"User clicks ""([^""]*)""")]
         public void WhenUserClicks(string queryText)
         {
-        
         Utils.WaitForElementAndClick(driver, queryText, "textlocator", 30);
         }
 
