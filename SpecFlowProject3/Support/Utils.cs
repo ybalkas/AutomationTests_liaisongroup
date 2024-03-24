@@ -57,17 +57,13 @@ namespace SpecFlowProject3.Support
             }
            
         }
-        public static void WaitForElementAndClick(IWebDriver driver, By element, int timeoutInSeconds)
-        {
-            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
-            wait.Until(ExpectedConditions.ElementToBeClickable(element)).Click();
-        }
+       
         public static void WaitForElementAndClick(IWebDriver driver, string text, int timeoutInSeconds)
         {
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutInSeconds));
             wait.Until(ExpectedConditions.ElementToBeClickable(ReturnXPathIfTextGiven(text))).Click();
         }
-
+        //fills Events form
         public static void FillTheForm(SelectEventModel selectEvent, IWebDriver driver)
             {
                 driver.FindElement(By.Id("field_event_full_name")).SendKeys(selectEvent.FullName);
@@ -87,11 +83,7 @@ namespace SpecFlowProject3.Support
             var select = new SelectElement(driver.FindElement(By.XPath(locatorText)));
             select.SelectByText(visibleText);
         }
-        public static IWebElement FindElementById(IWebDriver driver, string Id)
-        {
-            return driver.FindElement(By.Id(Id));
-          
-        }
+      
         public static void ClickByHoverOverAndActions(IWebDriver driver,string xpathLocator)
         {
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
@@ -134,6 +126,14 @@ namespace SpecFlowProject3.Support
             if (sortType.Equals("NewestToOldest")) return IsDescending;
             if (sortType.Equals("OldestToNewest")) return IsAscending;
             else { return false; }
+        }
+        public static void RegistrationForm(RegisterModel register, IWebDriver driver)
+        {
+            driver.FindElement(By.Id("FirstName")).SendKeys(register.FirstName);
+            driver.FindElement(By.Id("LastName")).SendKeys(register.LastName);
+            driver.FindElement(By.Id("RegistrationRequest_CompanyName")).SendKeys(register.RegistrationRequest_CompanyName);
+            driver.FindElement(By.Id("RegistrationRequest_EmailAddress")).SendKeys(register.RegistrationRequest_EmailAddress);
+            driver.FindElement(By.Id("RegistrationRequest_TelephoneNumber")).SendKeys(register.RegistrationRequest_TelephoneNumber);
         }
     }
 }

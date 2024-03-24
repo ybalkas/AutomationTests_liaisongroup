@@ -150,16 +150,14 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("A user expresses their interest in attending an event via the Attending Events Fo" +
-            "rm")]
-        public void AUserExpressesTheirInterestInAttendingAnEventViaTheAttendingEventsForm()
+        [NUnit.Framework.DescriptionAttribute("User should be able to open quesry ticket by logining")]
+        public void UserShouldBeAbleToOpenQuesryTicketByLogining()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("A user expresses their interest in attending an event via the Attending Events Fo" +
-                    "rm", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("User should be able to open quesry ticket by logining", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 16
-  this.ScenarioInitialize(scenarioInfo);
+this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
             {
@@ -172,36 +170,100 @@ this.FeatureBackground();
 this.FeatureBackground();
 #line hidden
 #line 17
-  testRunner.Given("the user navigates to the \"News, Insights & Events\" page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+  testRunner.Given("User in helpdesk page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 18
-  testRunner.Then("the url should be  \"https://www.liaisongroup.com/news-insights-events/\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+  testRunner.When("User clicks \"Log a query ticket\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 19
+  testRunner.Then("User SHould be able to direct to the registration page page \"https://liaisongroup" +
+                        ".selfservice.vivantio.com/Account/LogIn\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 20
+  testRunner.And("User Cliks new user button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
                 TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                             "Field",
                             "Value"});
                 table1.AddRow(new string[] {
-                            "FullName",
-                            "Yusuf Balkas"});
+                            "FirstName",
+                            "Yusuf"});
                 table1.AddRow(new string[] {
-                            "Email",
+                            "LastName",
+                            "Balkas"});
+                table1.AddRow(new string[] {
+                            "RegistrationRequest_CompanyName",
+                            "Yusuf\'s Tech Solutions Ltd"});
+                table1.AddRow(new string[] {
+                            "RegistrationRequest_EmailAddress",
                             "ybalkas@gmail.com"});
                 table1.AddRow(new string[] {
+                            "RegistrationRequest_TelephoneNumber",
+                            "0736247432"});
+#line 21
+  testRunner.When("User fills the registration form", ((string)(null)), table1, "When ");
+#line hidden
+#line 28
+  testRunner.Then("user should be able to see success message \"Thank you. Your registration request " +
+                        "has been sent and will be processed shortly\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("A user expresses their interest in attending an event via the Attending Events Fo" +
+            "rm")]
+        public void AUserExpressesTheirInterestInAttendingAnEventViaTheAttendingEventsForm()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("A user expresses their interest in attending an event via the Attending Events Fo" +
+                    "rm", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 30
+  this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 3
+this.FeatureBackground();
+#line hidden
+#line 31
+  testRunner.Given("the user navigates to the \"News, Insights & Events\" page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 32
+  testRunner.Then("the url should be  \"https://www.liaisongroup.com/news-insights-events/\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+                TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+                            "Field",
+                            "Value"});
+                table2.AddRow(new string[] {
+                            "FullName",
+                            "Yusuf Balkas"});
+                table2.AddRow(new string[] {
+                            "Email",
+                            "ybalkas@gmail.com"});
+                table2.AddRow(new string[] {
                             "Organisation",
                             "Alis\'s Tech Solutions Ltd"});
-                table1.AddRow(new string[] {
+                table2.AddRow(new string[] {
                             "Message",
                             "Looking forward to learning more about this event."});
-#line 19
-  testRunner.When("the user fill in the registration form with the following details", ((string)(null)), table1, "When ");
+#line 33
+  testRunner.When("the user fill in the registration form with the following details", ((string)(null)), table2, "When ");
 #line hidden
-#line 25
+#line 39
   testRunner.And("user choose an event \"Virtual VAT Conference\" from dropdown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 26
+#line 40
   testRunner.And("the user submits the form", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 27
+#line 41
   testRunner.Then("the user should see a confirmation message saying \"Your responses were successful" +
                         "ly submitted. Thank you!\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
