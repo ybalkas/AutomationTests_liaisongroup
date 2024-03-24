@@ -5,78 +5,160 @@ using TechTalk.SpecFlow;
 using NUnit.Framework;
 using OpenQA.Selenium.Interactions;
 using Microsoft.Extensions.Options;
+using static System.Net.Mime.MediaTypeNames;
+using SpecFlowProject3.Support;
+using TechTalk.SpecFlow.Assist;
+using SpecFlowProject3.Models;
+using OpenQA.Selenium.DevTools.V120.CSS;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
+using System.Security.Policy;
+using FluentAssertions.Common;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
+using NUnit.Framework.Internal;
+using System.Globalization;
+using static System.Net.WebRequestMethods;
 
 
 namespace SpecFlowProject3.StepDefinitions
-{  
+{
     [Binding]
     public class SomeTestsOnWww_Liaisongroup_ComStepDefinitions
     {
-        string path = @"c:\websites\test\selenium\chrome\";
-        //opt.BinaryLocation = path + "chrome.exe";
-        //driver = new ChromeDriver(path, opt);
-        //IWebDriver driver = new ChromeDriver("chromedriver.exe");
-       
-        IWebDriver driver = new ChromeDriver();
-        
-        [Given(@"the user is on the ""([^""]*)"" page")]
-        public void GivenTheUserIsOnThePage(string url)
-
+        public IWebDriver driver = new ChromeDriver();
+        [Given(@"the user is on the ""(.*)"" dashboard")]
+        public void GivenTheUserIsOnTheDashboard(string url)
         {
             driver.Navigate().GoToUrl(url);
             driver.Manage().Window.Maximize();
-            Thread.Sleep(2000);
-            driver.FindElement(By.XPath("//button[text()='Accept']")).Click();
-            Thread.Sleep(3000);
-            String actualUrl = driver.Url;
-            Assert.AreEqual(url, actualUrl);
-            driver.Quit();
-
+            Utils.ClickElementByText(driver, "Accept");
+            Assert.AreEqual(url, driver.Url);
         }
 
-        [Given(@"the user navigates to the ""([^""]*)"" on the website")]
-        public void GivenTheUserNavigatesToTheOnTheWebsite(string urlExpected)
+        [Given(@"the user navigates to the ""(.*)"" page")]
+        public void GivenTheUserNavigatesToThePage(string text)
         {
-           // String actualUrl = driver.Title;
-           // Assert.AreEqual(urlExpected, actualUrl);
-            //driver.Quit();
+            Utils.WaitForElementAndClick(driver, text, 10);
+
         }
 
         [Then(@"the url should be  ""([^""]*)""")]
-        public void ThenTheUrlShouldBe(string p0)
+        public void ThenTheUrlShouldBe(string urlExpected)
         {
-            throw new PendingStepException();
+            Assert.AreEqual(urlExpected, driver.Url);
+
+        }
+        [When(@"the user fill in the registration form with the following details")]
+        public void WhenTheUserFillInTheRegistrationFormWithTheFollowingDetails(Table table)
+        {
+            Utils.WaitForElementAndClick(driver, "Book a meeting", 30);
+            var details = table.CreateInstance<SelectEventModel>();
+            Utils.FillTheForm(details, driver);
         }
 
-        [When(@"the user selects an event from the ""([^""]*)"" dropdown")]
-        public void WhenTheUserSelectsAnEventFromTheDropdown(string p0)
+        [When(@"user choose an event ""([^""]*)"" from dropdown")]
+        public void WhenUserChooseAnEventFromDropdown(string eventName)
         {
-            throw new PendingStepException();
+            Utils.SelectFromDropdownByGivenLocator(driver, "//*[@id='field_event_dropdown']", eventName);
+            
         }
 
-        [When(@"the user fills in the ""([^""]*)"" field with ""([^""]*)""")]
-        public void WhenTheUserFillsInTheFieldWith(string message, string p1)
-        {
-            throw new PendingStepException();
-        }
 
         [When(@"the user submits the form")]
         public void WhenTheUserSubmitsTheForm()
         {
-            throw new PendingStepException();
+
+            Utils.ClickByHoverOverAndActions(driver, "(//button[contains(@class,'frm_final_submit')])[1]");
+
         }
+
 
         [Then(@"the user should see a confirmation message saying ""([^""]*)""")]
-        public void ThenTheUserShouldSeeAConfirmationMessageSaying(string p0)
+        public void ThenTheUserShouldSeeAConfirmationMessageSaying(string confirmMessage)
         {
-            throw new PendingStepException();
+            try { 
+            string actualMessage = driver.FindElement(By.XPath("//*[text()='Your responses were successfully submitted. Thank you!']")).Text;
+            Assert.AreEqual(confirmMessage, actualMessage);
+            }
+            catch { Console.WriteLine("Something Went Wrong in text verification"); }
+            finally { driver.Quit(); }
+        
+       }
+
+    [When(@"User clicks Contact and then click Vacancies")]
+        public void WhenUserClicksContactAndThenClickVacancies()
+        {
+            Utils.WaitForElementAndClick(driver, "Contact", "linkText", 30);
+            Utils.WaitForElementAndClick(driver, "//span[text()='Vacancies']", "xpath", 30);
+            Assert.AreEqual("START YOUR JOB SEARCH HERE", driver.FindElement(By.XPath("//a[text()='Start your job search here']")).Text);
+           
         }
 
-        [Then(@"an email should be sent to ""([^""]*)"" confirming the submission and providing next steps")]
-        public void ThenAnEmailShouldBeSentToConfirmingTheSubmissionAndProvidingNextSteps(string p0)
+        [Then(@"Careers page ""([^""]*)"" opens")]
+        public void ThenCareersPageOpens(string careersPage)
         {
-            throw new PendingStepException();
+            Assert.AreEqual(careersPage, driver.Url);
         }
+        [Then(@"User SHould be able to direct to job search page ""([^""]*)""")]
+        public void ThenUserSHouldBeAbleToDirectToJobSearchPage(string urlJobSearch)
+        {
+          try { 
+            Utils.WaitForElementAndClick(driver, "//a[text()='See our current vacancies here']", "xpath", 30);
+            Thread.Sleep(2000); 
+                // Switch to the new tab
+                var newTabHandle = driver.WindowHandles.LastOrDefault();
+                if (newTabHandle != null)
+                {
+                    driver.SwitchTo().Window(newTabHandle);
+                // Get the current URL of the new tab
+                Assert.AreEqual(urlJobSearch, driver.Url);
+            }
+            driver.FindElement(By.XPath("(//input[@type='search'])[2]")).SendKeys("Care Practitioner");
+            Utils.WaitForElementAndClick(driver, "//button[text()='Find me a job']", "xpath", 30);
+            List<IWebElement> list = driver.FindElements(By.XPath("//*[@class='MhrJobListResult-title']")).ToList();
+            Assert.GreaterOrEqual(list.Count, 1);
+               }
+          catch { throw new Exception(); }
+
+          finally { driver.Quit(); }
+
+        }
+
+        
+        
+        
+       [When(@"User search for ""([^""]*)""")]
+       public void WhenUserSearchFor(string p0)
+          {
+
+            Utils.WaitForElementAndClick(driver, "(//*[text()='CHC Backlog'])[3]", "xpath", 30);
+            
+        }
+        [Then(@"User should be able to see search results")]
+        public void ThenUserShouldBeAbleToSeeSearchResults()
+        {
+            List<IWebElement> list = driver.FindElements(By.XPath("//*[contains(@class, 'group sector')]")).ToList();
+            Assert.GreaterOrEqual(list.Count, 1);
+           
+        }
+        
+        [Then(@"User should be able to sort according to date")]
+        public void ThenUserShouldBeAbleToSortAccordingToDate()
+        {
+            try  {
+                var select = new SelectElement(driver.FindElement(By.XPath("//*[@name='sort']")));
+                select.SelectByText("Oldest to newest");
+                driver.FindElement(By.XPath("(//button[@type='submit'])[2]")).Click();
+                List<IWebElement> list = driver.FindElements(By.XPath("//*[contains(@class, 'group sector')]")).ToList();
+                //If You substitute "NewestToOldest" it checks whether it is sorted newest to oldest
+                Assert.IsTrue(Utils.IsSortedListAccordingToDate(list, "OldestToNewest"));
+            }
+            catch { throw new Exception(); }
+            finally { driver.Quit(); }
+        }
+    }
+
+
 
     }
-}
+
